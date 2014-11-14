@@ -23,7 +23,7 @@ class SongBasedPredictor:
         count_song1_song2 =  float(len(self.song_user_map[song1].intersection(self.song_user_map[song2])))
 
         if count_song1_song2 > 0:
-            similarity = count_song1_song2/(math.pow(count_song1, self.alpha) * math.pow(count_song2, self.alpha))
+            similarity = count_song1_song2/(math.pow(count_song1, self.alpha) * math.pow(count_song2, 1-self.alpha))
         return similarity
 
     def find_conditional_based_similarity(self, song1, song2):
