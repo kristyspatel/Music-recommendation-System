@@ -7,7 +7,7 @@ fileHidden - file object to write to the hidden part of test file
 """
 
 
-f = open('kaggle_visible_evaluation_triplets.txt', 'r')
+f = open('Data/kaggle_visible_evaluation_triplets.txt', 'r')
 fileVisible = open('kaggle_visible.txt', 'a')
 fileHidden = open('kaggle_hidden.txt', 'a')
 prev = ""
