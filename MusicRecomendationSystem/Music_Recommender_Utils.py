@@ -52,3 +52,27 @@ def get_song_to_user_index_map(trainingFile, unique_users_list_with_indecies):
             except:
                 song_users_map[song_id]=set([user_index])
     return  song_users_map
+
+
+def get_user_songs_map(testingFile):
+    """ This finctions loads user,song,play_count triplets and returns the dictionar yof users with the set of songs the user has listened to"""
+    user_song_dict = dict()
+    with open(testingFile,"r") as f:
+        for line in f:
+            user_id,song_id,_ = line.strip().split('\t')
+            try:
+                user_song_dict[user_id].add(song_id)
+            except:
+                user_song_dict[user_id]=set([song_id])
+    return user_song_dict
+
+
+def save_results(top_recommended_songs, out_put_filename):
+    """ This function saves recommendation given in argument ito file """
+    print("Saving recommendations")
+    f = open(out_put_filename,"w")
+    for top_song in top_recommended_songs:
+        out_line = [str(top_song), '\n']
+        f.writelines(out_line)
+    f.close()
+    print("Done Saving recommendations")
