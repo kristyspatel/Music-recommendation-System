@@ -13,7 +13,7 @@ class MusicRecommender:
 
     def recommend_songs_for_user(self, user_id, user_to_songs_map):
         """ This method recommends top N songs for a given user based on the score calculated using predictor"""
-        print("Calling recommend songs for a user" + user_id)
+        print("Calling recommend songs for a user " , str(user_id))
         scores_for_songs = set()
         user_listening_history = user_to_songs_map[user_id]
         if user_id in user_to_songs_map:

@@ -1,22 +1,22 @@
 __author__ = 'pejakalabhargava'
-import Music_Recommender_Utils, Song_Based_Predictor, Music_Recommender
+import Music_Recommender_Utils, Song_Based_Predictor, Music_Recommender,sys
 
 if __name__ == '__main__':
 # Get the userId on whom we need to recommend songs
-user_id = sys.argv[1]
-user_id = int(user_id)
-trainingFile = "train_triplets.txt"
-testingFile = "kaggle_visible_evaluation_triplets.txt"
-out_put_filename = "output.txt"
+	user_id = sys.argv[1]
+	user_id = int(user_id)
+	trainingFile = "Data\msd_train.txt"
+	testingFile = "Data\kaggle_visible_evaluation_triplets.txt"
+	out_put_filename = "Data\output.txt"
 
 
 # Load users to a list
 print("loading users to a list")
-users_list = list(Music_Recommender_Utils.load_users("kaggle_users.txt"))
+users_list = list(Music_Recommender_Utils.load_users("Data\kaggle_users.txt"))
 
 #Order songs by popularity
 print("Fetching songs by popularity")
-popular_songs_by_id = Music_Recommender_Utils.get_songs_by_popularity(trainingFile)
+popular_songs_by_id = Music_Recommender_Utils.get_songs_by_popularity("Data\msd_train.txt")
 
 #load users Index
 print("Load unique Users idecies")

@@ -8,7 +8,7 @@ def load_users(file_name):
 def get_songs_by_popularity(trainingFile):
     """ This function counts the number of users that listens to each song """
     s = dict()
-    with open(file, "r") as f:
+    with open(trainingFile, "r") as f:
         for line in f:
             _, song, _ = line.strip().split('\t')
             try:
