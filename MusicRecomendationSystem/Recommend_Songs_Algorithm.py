@@ -46,7 +46,7 @@ music_recommender = Music_Recommender.MusicRecommender(songs_ordered_by_populari
                                                        music_predictor=music_predictor, N=50)
 
 if(users_list[user_id]):
-    top_recommended_songs = music_recommender.recommend_songs_for_user(user_id,user_song_map_test_data)
+    top_recommended_songs = music_recommender.recommend_songs_for_user(users_list[user_id],user_song_map_test_data)
 else:
     print("Invalid UserId")
     exit(0)
