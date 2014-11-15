@@ -12,7 +12,7 @@ class SongBasedPredictor:
         print("Creation of song based predictor")
         self.song_user_map = song_user_map
         self.alpha = alpha
-        self_similarity_measure = simialrity_measure
+        self.similarity_measure = simialrity_measure
 
     def find_cosine_similarity(self, song1, song2):
         """This method is used to find cosine simialrity between song1 and song2"""
