@@ -44,7 +44,6 @@ user_song_map_test_data = Music_Recommender_Utils.get_user_songs_map(testingFile
 #initialise the recommender required with top 50 songs as output desired
 music_recommender = Music_Recommender.MusicRecommender(songs_ordered_by_popularity=popular_songs_by_id,
                                                        music_predictor=music_predictor, N=50)
-
 if(users_list[user_id]):
     top_recommended_songs = music_recommender.recommend_songs_for_user(users_list[user_id],user_song_map_test_data)
 else:

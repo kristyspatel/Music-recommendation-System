@@ -71,8 +71,11 @@ def save_results(top_recommended_songs, out_put_filename):
     """ This function saves recommendation given in argument ito file """
     print("Saving recommendations")
     f = open(out_put_filename,"w")
-    for top_song in top_recommended_songs:
-        out_line = [str(top_song), '\n']
-        f.writelines(out_line)
-    f.close()
+    if top_recommended_songs != None:
+        for top_song in top_recommended_songs:
+            out_line = [str(top_song), '\n']
+            f.writelines(out_line)
+        f.close()
+    else:
+        print("No recomendation")
     print("Done Saving recommendations")

@@ -23,13 +23,13 @@ class MusicRecommender:
             sorted_scores_by_song_id = Music_Recommender_Utils.sort_dictionary(scores_for_songs)
         else:
             # if user not in the matrix we recommend the best songs
-            sorted_scores = self.songs_ordered_by_popularity
+            sorted_scores_by_song_id = self.songs_ordered_by_popularity
 
         processed_song_list_for_user = list()
-        for song in processed_song_list_for_user:
+        for song in sorted_scores_by_song_id:
             if len(processed_song_list_for_user)>=self.N:
                 break
             if song not in user_to_songs_map[user_id]:
                 processed_song_list_for_user.append(song)
 
-            return processed_song_list_for_user[0:self.N]
+        return processed_song_list_for_user

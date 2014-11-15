@@ -16,7 +16,7 @@ class SongBasedPredictor:
 
     def find_cosine_similarity(self, song1, song2):
         """This method is used to find cosine simialrity between song1 and song2"""
-        print("calling cosine similarity")
+        #print("calling cosine similarity")
         similarity = 0
         count_song1 = len(self.song_user_map[song1])
         count_song2 = len(self.song_user_map[song2])
@@ -28,7 +28,7 @@ class SongBasedPredictor:
 
     def find_conditional_based_similarity(self, song1, song2):
         """This method is used to find the conditional based simimarity between song1 and song2"""
-        print("calling conditional based probability")
+        #print("calling conditional based probability")
         similarity = 0
         count_user1 = len(self.song_user_map[song1])
         count_user2 = len(self.song_user_map[song2])
@@ -50,12 +50,12 @@ class SongBasedPredictor:
                 for user_listened_song in user_listened_songs:
                     if(user_listened_song in self.song_user_map):
                         #ge the similarity measure type
-                        if self.simialrity_measure == 0:
+                        if self.similarity_measure == 0:
                             #call cosine similarity
-                            similarity = self.cosine_similarity(song_id,user_listened_song)
-                        if self.sim == 1:
+                            similarity = self.find_cosine_similarity(song_id,user_listened_song)
+                        if self.similarity_measure == 1:
                             #call conditional probability similarity
-                            similarity = self.similarity(song_id,user_listened_song)
+                            similarity = self.find_conditional_based_similarity(song_id,user_listened_song)
                             # locality-sensitive param gamma is 2
                         scores_map[song_id] += math.pow(similarity, 2)
         return scores_map
