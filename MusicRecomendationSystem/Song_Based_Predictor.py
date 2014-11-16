@@ -2,7 +2,7 @@ __author__ = 'pejakalabhargava'
 import math
 #ItemBasedPredicor
 class SongBasedPredictor:
-    def __init__(self,song_user_map, alpha = 0.5,simialrity_measure=0):
+    def __init__(self,song_user_map, alpha = 0.5,similarity_measure=0,q=2):
         """:arg
                 song_user_map       - Represents the song_to_user index map
                 alpha               - determines the weight that needs to be given while calculating the similarity measure
@@ -12,10 +12,11 @@ class SongBasedPredictor:
         print("Creation of song based predictor")
         self.song_user_map = song_user_map
         self.alpha = alpha
-        self.similarity_measure = simialrity_measure
+        self.similarity_measure = similarity_measure
+        self.q = q
 
     def find_cosine_similarity(self, song1, song2):
-        """This method is used to find cosine simialrity between song1 and song2"""
+        """This method is used to find cosine similarity between song1 and song2"""
         #print("calling cosine similarity")
         similarity = 0
         count_song1 = len(self.song_user_map[song1])
@@ -27,7 +28,7 @@ class SongBasedPredictor:
         return similarity
 
     def find_conditional_based_similarity(self, song1, song2):
-        """This method is used to find the conditional based simimarity between song1 and song2"""
+        """This method is used to find the conditional based similarity between song1 and song2"""
         #print("calling conditional based probability")
         similarity = 0
         count_user1 = len(self.song_user_map[song1])
@@ -35,7 +36,7 @@ class SongBasedPredictor:
         count_user1_user2 =  float(len(self.song_user_map[count_user1].intersection(self.song_user_map[count_user2])))
 
         if count_user1_user2 > 0:
-            similarity = count_song1_song2 / (count_song1 * math.pow(count_song2,self.alpha))
+            similarity = count_user1_user2 / (count_user1 * math.pow(count_user2,self.alpha))
         return similarity
 
     def find_score(self,user_listened_songs, all_possible_songs):
@@ -57,5 +58,5 @@ class SongBasedPredictor:
                             #call conditional probability similarity
                             similarity = self.find_conditional_based_similarity(song_id,user_listened_song)
                             # locality-sensitive param gamma is 2
-                        scores_map[song_id] += math.pow(similarity, 2)
+                        scores_map[song_id] += math.pow(similarity, self.q)
         return scores_map

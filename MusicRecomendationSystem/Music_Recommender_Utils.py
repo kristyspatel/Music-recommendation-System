@@ -1,14 +1,14 @@
 def load_users(file_name):
     """ This function loads users from users file and returns list of users to the caller"""
     with open(file_name, "r") as f:
-        u = map(lambda line: line.strip(), f.readlines())
+        u = [line.strip() for line in list(f.readlines())]
     return u
 
 
-def get_songs_by_popularity(trainingFile):
+def get_songs_by_popularity(file):
     """ This function counts the number of users that listens to each song """
     s = dict()
-    with open(trainingFile, "r") as f:
+    with open(file, "r") as f:
         for line in f:
             _, song, _ = line.strip().split('\t')
             try:
@@ -32,21 +32,24 @@ def load_unique_users(trainingFile):
     return u
 
 
-def get_unique_users_list_with_indecies(unique_users_list):
+def userid_index_map(users):
     """ THis method is used to load indecies for user names"""
-    indexDictionary = dict()
-    for i,user_name in enumerate(unique_users_list):
-        indexDictionary[user_name] = i
-    return indexDictionary
+    user_indices = {user:i for i,user in enumerate(users)}
+    return user_indices
 
+def song_index(file):
+    song_indices = {}
+    with open(file,"r") as f:
+        song_indices= {line.split(' ')[0].strip(): line.split(' ')[1].strip() for line in list(f.readlines())}
+    return song_indices
 
-def get_song_to_user_index_map(trainingFile, unique_users_list_with_indecies):
+def song_user_map(file, user_indices):
     """ This function loads user,song,play_count triplets to form the map of song with set of users who listens to that song """
     song_users_map = dict()
-    with open(trainingFile,"r") as f:
+    with open(file,"r") as f:
         for line in f:
             user_id,song_id,_ = line.strip().split('\t')
-            user_index = unique_users_list_with_indecies[user_id]
+            user_index = user_indices[user_id]
             try:
                 song_users_map[song_id].add(user_index)
             except:
@@ -54,10 +57,10 @@ def get_song_to_user_index_map(trainingFile, unique_users_list_with_indecies):
     return  song_users_map
 
 
-def get_user_songs_map(testingFile):
+def user_song_map(file):
     """ This finctions loads user,song,play_count triplets and returns the dictionar yof users with the set of songs the user has listened to"""
     user_song_dict = dict()
-    with open(testingFile,"r") as f:
+    with open(file,"r") as f:
         for line in f:
             user_id,song_id,_ = line.strip().split('\t')
             try:
@@ -65,6 +68,28 @@ def get_user_songs_map(testingFile):
             except:
                 user_song_dict[user_id]=set([song_id])
     return user_song_dict
+
+def u_s_map(file,u_indices,s_indices):
+    user_song_map = {}
+    with open(file,"r") as f:
+        for line in list(f.readlines()):
+            u,s,_ = line.strip().split('\t')
+            try:
+                user_song_map[u_indices[u]].add(s_indices[s])
+            except:
+                user_song_map[u_indices[u]]=set([s_indices[s]])
+    return user_song_map
+
+def s_u_map(file,u_indices,s_indices):
+    song_user_map = {}
+    with open(file,"r") as f:
+        for line in list(f.readlines()):
+            u,s,_ = line.strip().split('\t')
+            try:
+                song_user_map[s_indices[s]].add(u_indices[u])
+            except:
+                song_user_map[s_indices[s]]=set([u_indices[u]])
+    return song_user_map
 
 
 def save_results(top_recommended_songs, out_put_filename):
