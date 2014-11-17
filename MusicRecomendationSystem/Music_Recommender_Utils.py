@@ -62,13 +62,14 @@ def user_song_map(file):
     user_song_dict = dict()
     with open(file,"r") as f:
         for line in f:
-            user_id,song_id,_ = line.strip().split('\t')
+            user_id,song_id,count = line.strip().split('\t')
             try:
                 user_song_dict[user_id].add(song_id)
             except:
                 user_song_dict[user_id]=set([song_id])
     return user_song_dict
 
+# Kristy required as there was no function which used indices to retun u_s map
 def u_s_map(file,u_indices,s_indices):
     user_song_map = {}
     with open(file,"r") as f:
@@ -80,6 +81,7 @@ def u_s_map(file,u_indices,s_indices):
                 user_song_map[u_indices[u]]=set([s_indices[s]])
     return user_song_map
 
+# Kristy required as there was no function which used indices to retun s_u map
 def s_u_map(file,u_indices,s_indices):
     song_user_map = {}
     with open(file,"r") as f:
@@ -90,7 +92,6 @@ def s_u_map(file,u_indices,s_indices):
             except:
                 song_user_map[s_indices[s]]=set([u_indices[u]])
     return song_user_map
-
 
 def save_results(top_recommended_songs, out_put_filename):
     """ This function saves recommendation given in argument ito file """
