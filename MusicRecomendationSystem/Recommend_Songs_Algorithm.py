@@ -4,9 +4,9 @@ import Song_Based_Predictor
 import Music_Recommender
 import sys
 import User_Based_Predictor as u_predictor
+import time
 
-
-def song_based_recommender(trainingFile, out_put_filename, user_id, alpha, q, N):
+def song_based_recommender(trainingFile, user_id, alpha, q, N):
     print("loading users to a list")
     users_list = list(util.load_users("Data\kaggle_users.txt"))
 
@@ -32,7 +32,7 @@ def song_based_recommender(trainingFile, out_put_filename, user_id, alpha, q, N)
     #next step is to initialize the predictor
     #callign with similarity measure as  cosine for now
     music_predictor = Song_Based_Predictor.SongBasedPredictor(song_user_map=song_to_user_index_map, alpha=alpha,
-                                                              similarity_measure=0);
+                                                              similarity_measure=0)
     #load the test data as dictionary of users with the set of songs the user has listened to as user vector
     print("Loading the test data")
     user_song_map = util.user_song_map('Data\kaggle_visible_evaluation_triplets.txt')
@@ -46,7 +46,8 @@ def song_based_recommender(trainingFile, out_put_filename, user_id, alpha, q, N)
     #   top_recommended_songs=[]
     #   print("Invalid UserId")
     #exit(0)"""
-    util.save_results(top_recommended_songs, out_put_filename)
+    out_put_filename = "Data\output"+str(time.time())+".txt"
+    #util.save_results(top_recommended_songs, out_put_filename)
     return top_recommended_songs
 
 
@@ -78,15 +79,52 @@ def user_based_recommender(alpha, q, user_id, N):
     top_recommended_songs = music_recommender.recommend_songs_for_user(user_id, u_s_map)
     #get the actual songs from the ids
     #top_recommended_songs = [sorted_songs[i] for i in top_recommended_songs_ids]
-    util.save_results(top_recommended_songs, 'kp.txt')
+    #util.save_results(top_recommended_songs, 'kp'+str(time.time())+'.txt')
     return top_recommended_songs
 
+def run_algorithms(alpha,q,N):
+    users = util.load_users("Data\kaggle_users.txt")
+    total_users = len(users)
+    trainingFile = "Data\msd_train.txt"
+    testFile = "Data\Test\kaggle_hidden.txt"
+    expected_op = util.user_song_map(testFile)
+    sb_prec = []
+    ub_prec = []
+    for i,user in enumerate(users):
+        predicted_ub_op = user_based_recommender(alpha,q,i,N)
+        predicted_sb_op = song_based_recommender(trainingFile,i,alpha,q,N)
+        ub_prec_u = average_precision(predicted_ub_op,expected_op[user])
+        sb_prec_u = average_precision(predicted_sb_op,expected_op[user])
+        sb_prec.append(sb_prec_u)
+        ub_prec.append(ub_prec_u)
+    mean_averge_precsion_sb = sum(sb_prec)/total_users
+    mean_averge_precsion_ub = sum(ub_prec)/total_users
 
-def mean_average_precision(predicted,expected):
+    print("sb prec",mean_averge_precsion_sb)
+    print("ub prec",mean_averge_precsion_ub)
+    return mean_averge_precsion_sb,mean_averge_precsion_ub
+
+def average_precision(predicted, expected):
     print("Calculating mean average precision")
-    #for
-
-
+    num_corr_pred = []
+    heard_not_heard = []
+    count = 0
+    for i,song in enumerate(predicted):
+        if song in expected:
+            count = count+1
+            heard_not_heard.append(1)
+        else:
+            heard_not_heard.append(0)
+        num_corr_pred.append(count)
+    num_positively_predicted = count
+    print(num_corr_pred)
+    precision_at_k = [num_corr_pred[i]/(i+1) for i in range (0,len(num_corr_pred))]
+    print(precision_at_k)
+    try:
+        avg_precision = sum([precision_at_k[i]*heard_not_heard[i] for i in range(0,len(predicted))])/min(num_positively_predicted,len(predicted))
+    except ZeroDivisionError:
+        avg_precision= 0
+    return avg_precision
 
 def load_data(trainfile, testfile, users, songs):
     print("loading data from files")
@@ -94,17 +132,7 @@ def load_data(trainfile, testfile, users, songs):
 
 if __name__ == '__main__':
     # Get the userId for whom we need to recommend songs
-    alpha=0.5
-    q = 3
-    N = 30
-    user_id = sys.argv[1]
-    user = sys.argv[2]
-    trainingFile = "Data\msd_train.txt"
-    testFile = "Data\Test\kaggle_hidden.txt"
-    expected_op = util.user_song_map(testFile)[user]
-    predicted_ub_op = user_based_recommender(alpha,q,int(user_id),N)
-    predicted_sb_op = song_based_recommender(trainingFile,"Data\output.txt",int(user_id),alpha,q,N)
-    out_put_filename = "Data\output.txt"  # Load users to a list
+    run_algorithms(0.5,3,500)
 
 
 

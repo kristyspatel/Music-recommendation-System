@@ -23,7 +23,7 @@ class UserBasedPredictor:
         n_u1_songs = len(self.user_song_map[u1])
         n_u2_songs = len(self.user_song_map[u2])
         try:
-            similarity = n_common_songs/(math.pow(n_u1_songs,self.alpha) * math.pow(n_u2_songs,self.alpha))
+            similarity = n_common_songs/(math.pow(n_u1_songs,self.alpha) * math.pow(n_u2_songs,(1-self.alpha)))
         except ZeroDivisionError:
             similarity=0
         return similarity
