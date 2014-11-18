@@ -136,11 +136,3 @@ for i in range(1, lenNearestNeighbor - 1, 1):
 testFile.close()
 trainFile.close()
 fileOut.close()
-
-
-
-
-
-
-
-
